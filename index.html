@@ -5,18 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flashlight Toggle</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <script defer src="script.js"></script>
 </head>
 <body class="d-flex justify-content-center align-items-center vh-100 bg-dark text-white">
     
-    <button id="flashBtn" class="btn btn-lg btn-warning rounded-circle shadow">
-        <i class="bi bi-lightbulb-off"></i>
+    <button id="flashBtn" class="btn btn-lg btn-warning rounded-circle shadow d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+        <i id="flashIcon" class="bi bi-lightbulb-off" style="font-size: 2rem;"></i>
     </button>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
     <script>
         let track = null;
         const flashBtn = document.getElementById("flashBtn");
+        const flashIcon = document.getElementById("flashIcon");
 
         async function toggleFlashlight() {
             if (!track) {
@@ -24,14 +25,20 @@
                     const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
                     track = stream.getVideoTracks()[0];
                     await track.applyConstraints({ advanced: [{ torch: true }] });
-                    flashBtn.innerHTML = '<i class="bi bi-lightbulb-fill"></i>';
+
+                    // Change button color & icon when flashlight is ON
+                    flashBtn.classList.replace("btn-warning", "btn-success");
+                    flashIcon.classList.replace("bi-lightbulb-off", "bi-lightbulb-fill");
                 } catch (error) {
                     console.error("Flashlight error:", error);
                 }
             } else {
                 track.stop();
                 track = null;
-                flashBtn.innerHTML = '<i class="bi bi-lightbulb-off"></i>';
+
+                // Change back to OFF state
+                flashBtn.classList.replace("btn-success", "btn-warning");
+                flashIcon.classList.replace("bi-lightbulb-fill", "bi-lightbulb-off");
             }
         }
 
